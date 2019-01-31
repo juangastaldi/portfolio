@@ -1,0 +1,269 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+	<changeSet author="jgastaldi" id="201810271144_create_tables">
+		<createTable tableName="person">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_person" />
+			</column>
+			<column name="person_identification_number" type="BIGINT"/>
+			<column name="name" type="VARCHAR(255)"/>
+		</createTable>
+		<createTable tableName="trader">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_trader" />
+			</column>
+			<column name="person_id" type="BIGINT"/>
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="person_id" baseTableName="trader"
+			constraintName="fk_trader_person" referencedColumnNames="id"
+			referencedTableName="person" />
+		<createTable tableName="assets_type">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_assets_type" />
+			</column>
+			<column name="assets_type" type="VARCHAR(10)"/>
+			<column name="code" type="VARCHAR(10)"/>
+			<column name="currency" type="VARCHAR(10)"/>
+		</createTable>
+		<createTable tableName="transaction_type">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_transaction_type" />
+			</column>
+			<column name="transaction" type="VARCHAR(5)" />
+		</createTable>
+		<createTable tableName="assets">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_assets" />
+			</column>
+			<column name="person_id" type="BIGINT"/>
+			<column name="assets_type_id" type="BIGINT"/>
+			<column name="amount" type="BIGINT"/>
+			<column name="purchase_price" type="DOUBLE"/>
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="person_id" baseTableName="assets"
+			constraintName="fk_assets_person" referencedColumnNames="id"
+			referencedTableName="person" />
+		<addForeignKeyConstraint
+			baseColumnNames="assets_type_id" baseTableName="assets"
+			constraintName="fk_assets_assets_type" referencedColumnNames="id"
+			referencedTableName="assets_type" />
+		<createTable tableName="price">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_price" />
+			</column>
+			<column name="assets_type_id" type="BIGINT"/>
+			<column name="buy_price" type="DOUBLE"/>
+			<column name="sell_price" type="DOUBLE"/>
+			<column name="until" type="DATETIME"/>
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="assets_type_id" baseTableName="price"
+			constraintName="fk_price_assets_type" referencedColumnNames="id"
+			referencedTableName="assets_type" />
+		<createTable tableName="transaction">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_transaction" />
+			</column>
+			<column name="person_id" type="BIGINT"/>
+			<column name="trader_id" type="BIGINT"/>
+			<column name="assets_type_id" type="BIGINT"/>
+			<column name="transaction_type_id" type="BIGINT"/>
+			<column name="amount" type="BIGINT"/>
+			<column name="price" type="DOUBLE"/>
+			<column name="date" type="DATETIME"/>
+		</createTable>
+		<addForeignKeyConstraint
+			baseColumnNames="person_id" baseTableName="transaction"
+			constraintName="fk_transaction_person" referencedColumnNames="id"
+			referencedTableName="person" />
+		<addForeignKeyConstraint
+			baseColumnNames="trader_id" baseTableName="transaction"
+			constraintName="fk_transaction_trader" referencedColumnNames="id"
+			referencedTableName="trader" />
+		<addForeignKeyConstraint
+			baseColumnNames="assets_type_id" baseTableName="transaction"
+			constraintName="fk_transaction_assets_type" referencedColumnNames="id"
+			referencedTableName="assets_type" />
+	</changeSet>
+	 <changeSet author="java" id="201810272223">
+		 <insert tableName="person">
+			 <column name="person_identification_number">1</column>
+			 <column name="name"> Person1</column>
+		</insert>
+		<insert tableName="person">
+			 <column name="person_identification_number">2</column>
+			 <column name="name"> Person2</column>
+		</insert>
+		<insert tableName="person">
+			 <column name="person_identification_number">3</column>
+			 <column name="name"> Person3</column>
+		</insert>
+		<insert tableName="person">
+			 <column name="person_identification_number">4</column>
+			 <column name="name"> Person4</column>
+		</insert>
+		<insert tableName="person">
+			 <column name="person_identification_number">5</column>
+			 <column name="name"> Person5</column>
+		</insert>
+		<insert tableName="trader">
+			 <column name="person_id">1</column>
+		</insert>
+		<insert tableName="trader">
+			 <column name="person_id">2</column>
+		</insert>
+		<insert tableName="assets_type">
+			<column name="assets_type">cash</column>
+			<column name="code">USD</column>
+			<column name="currency">USD</column>
+		</insert>
+		<insert tableName="assets_type">
+			<column name="assets_type">cash</column>
+			<column name="code">EUR</column>
+			<column name="currency">USD</column>
+		</insert>
+		<insert tableName="assets_type">
+			<column name="assets_type">stocks</column>
+			<column name="code">st1</column>
+			<column name="currency">USD</column>
+		</insert>
+		<insert tableName="assets_type">
+			<column name="assets_type">stocks</column>
+			<column name="code">st2</column>
+			<column name="currency">EUR</column>
+		</insert>
+		<insert tableName="assets_type">
+			<column name="assets_type">bonds</column>
+			<column name="code">bo1</column>
+			<column name="currency">USD</column>
+		</insert>
+		<insert tableName="assets_type">
+			<column name="assets_type">bonds</column>
+			<column name="code">bo2</column>
+			<column name="currency">EUR</column>
+		</insert>
+		<insert tableName="transaction_type">
+			<column name="transaction">buy</column>
+		</insert>
+		<insert tableName="transaction_type">
+			<column name="transaction">sell</column>
+		</insert>
+		<insert tableName="price">
+			<column name="assets_type_id">1</column>
+			<column name="buy_price">1</column>
+			<column name="sell_price">1</column>
+		</insert>
+		<insert tableName="price">
+			<column name="assets_type_id">2</column>
+			<column name="buy_price">1.15</column>
+			<column name="sell_price">1.14</column>
+		</insert>
+		<insert tableName="price">
+			<column name="assets_type_id">3</column>
+			<column name="buy_price">25</column>
+			<column name="sell_price">24</column>
+		</insert>
+		<insert tableName="price">
+			<column name="assets_type_id">4</column>
+			<column name="buy_price">36</column>
+			<column name="sell_price">35.25</column>
+		</insert>
+		<insert tableName="price">
+			<column name="assets_type_id">5</column>
+			<column name="buy_price">62.22</column>
+			<column name="sell_price">62.05</column>
+		</insert>
+		<insert tableName="price">
+			<column name="assets_type_id">6</column>
+			<column name="buy_price">11.65</column>
+			<column name="sell_price">11</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">1</column>
+			<column name="transaction_type_id">1</column>
+			<column name="amount">50000</column>
+			<column name="price">1</column>
+			<column name="date">2018-01-01 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">2</column>
+			<column name="assets_type_id">1</column>
+			<column name="transaction_type_id">1</column>
+			<column name="amount">10000</column>
+			<column name="price">1</column>
+			<column name="date">2018-01-02 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">1</column>
+			<column name="transaction_type_id">2</column>
+			<column name="amount">30000</column>
+			<column name="price">1</column>
+			<column name="date">2018-01-03 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">2</column>
+			<column name="transaction_type_id">1</column>
+			<column name="amount">10000</column>
+			<column name="price">1.13</column>
+			<column name="date">2018-01-04 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">2</column>
+			<column name="transaction_type_id">1</column>
+			<column name="amount">5000</column>
+			<column name="price">1.135</column>
+			<column name="date">2018-01-05 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">3</column>
+			<column name="transaction_type_id">1</column>
+			<column name="amount">5000</column>
+			<column name="price">25.23</column>
+			<column name="date">2018-01-06 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">3</column>
+			<column name="transaction_type_id">1</column>
+			<column name="amount">1000</column>
+			<column name="price">26.01</column>
+			<column name="date">2018-01-07 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">3</column>
+			<column name="transaction_type_id">2</column>
+			<column name="amount">1000</column>
+			<column name="price">26.83</column>
+			<column name="date">2018-01-08 12:00:00</column>
+		</insert>
+		<insert tableName="transaction">
+			<column name="person_id">3</column>
+			<column name="trader_id">1</column>
+			<column name="assets_type_id">4</column>
+			<column name="transaction_type_id">1</column>
+			<column name="amount">60000</column>
+			<column name="price">10.83</column>
+			<column name="date">2018-01-09 12:00:00</column>
+		</insert>
+     </changeSet>
+</databaseChangeLog>
